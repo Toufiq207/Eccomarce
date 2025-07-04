@@ -38,7 +38,7 @@ const router = createBrowserRouter(
       element={<Shop />}>
       </Route>
     <Route
-      path="product"
+      path="product/:title"
       element={<Product />}>
       </Route>
     <Route

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Container from '../components/Container'
 import Flex from '../components/Flex'
 import Image from '../components/Image'
@@ -8,14 +8,19 @@ import {  FaShoppingCart, FaUser } from 'react-icons/fa'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { ImCross } from 'react-icons/im'
 import {  useDispatch, useSelector } from 'react-redux'
-import { decre, incre } from '../slices/AddToCardSlice'
+import { decre, incre, remove } from '../slices/AddToCardSlice'
+import Button from '../components/Button'
+import { Link } from 'react-router-dom'
 
 
 
 const Sideber = () => {
   let dispatch=useDispatch()
   let [show,setShow]=useState(false)
+  let [total,setTotal]=useState(0)
   let data=useSelector((state)=>state.addToCard.value)
+  
+
  let handleIncrement=(item)=>{
   // console.log("Increment");
   dispatch(incre(item))
@@ -26,6 +31,19 @@ const Sideber = () => {
   // console.log("Decrement");
    dispatch(decre(item))
  }
+ let handleRemove=(item)=>{
+   dispatch( remove(item))
+  
+ }
+ useEffect(()=>{
+  let total=0
+  data.map(item=>{
+     total+= item.price*item.quantity;
+  
+    
+  })
+   setTotal(total);
+ },[data])
 
  
   return (
@@ -53,22 +71,27 @@ const Sideber = () => {
             </Flex>
             {
               show ?<div className='w-1/3 h-screen bg-primary  absolute top-0 right-0 z-[99999]'>
-                 <ImCross onClick={()=>setShow(!show)}/>
-                    <ul className='flex justify-between items-center px-5 pb-3 border border-white mb-3 border-[5px]'>
+                 <ImCross className='my-4 mx-6' onClick={()=>setShow(!show)}/>
+                    <ul className='flex justify-between items-center px-5 py-3  border border-white mb-3 text-xl font-semibold'>
+                      
+                      <li>Action</li>
                       <li>Product</li>
                       <li>Picture</li>
                       <li>Price</li>
                       <li>Quantity</li>
                       <li>Subtotal</li>
                     </ul>
-                    {
+                {
+                  data.length>0 ?    
+                     <>{
                       data.map(item=>(
                       <ul className='flex justify-between items-center px-5 py-3 border border-white mb-3 cursor-pointer'>
-                        <li>{item.title}</li>
-                        <li><Image className='w-[50px] rounded-full' src={item.img}/></li>
+                        <li onClick={()=>handleRemove(item)}><ImCross className='text-xs ml-6'/></li>
+                        <li>{item.title.substring(0,14)}....</li>
+                        {/* <li><Image className='w-[50px] rounded-full' src={item.img}/></li> */}
                       <li >
                         
-                        ${item.price}
+                        ${Math.round(item.price)}
                         
                       </li>
                         <li className='border border-white py-2 px-8 flex gap-x-3'>
@@ -78,15 +101,27 @@ const Sideber = () => {
                           <span onClick={()=>handleIncrement(item)}>+</span>
                           </li>
                       
-                      <li >${item.price*item.quantity}</li>
+                      <li >${Math.round(item.price*item.quantity)}</li>
                       
           
                       </ul >
+                      
                       )
-
+                
                       )
                     }
-                  
+                          <div className='flex gap-x-5 justify-center pt-20'>
+                          <Link to="card">  <Button text='View Cart'/></Link>
+                           <Link to="cheakout"> <Button text='Cheakout'/></Link>
+                          </div>
+                     </>
+                    
+                    :
+                    <h1 className='text-4xl font-dm font-bold text-center pt-[200px]'>Card is Emty</h1>
+
+                }
+                  <div className='text-2xl font-dm font-bold  absolute right-6 bottom-6'>Total:{Math.round(total)}</div>
+                
               </div>:""
 
             }

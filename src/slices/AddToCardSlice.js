@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const AddToCardSlice = createSlice({
   name: 'cart',
   initialState: {
-    value: [],
+    value:localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [],
   },
   reducers: {
   addToCard: (state,action) => {
@@ -23,7 +23,7 @@ state.value.push({...action.payload,quantity: 1})
 }
 
 
-
+localStorage.setItem("cart",JSON.stringify(state.value))
       
     },
    
@@ -35,10 +35,10 @@ state.value.push({...action.payload,quantity: 1})
     if(item.title==action.payload.title){
       item.quantity+=1
     }
-    
+   
   })
     
-    
+     localStorage.setItem("cart",JSON.stringify(state.value))
    },
    decre:(state,action)=>{
    state.value.map(item=>{
@@ -49,7 +49,17 @@ state.value.push({...action.payload,quantity: 1})
      
      }
    })
-   }
+    localStorage.setItem("cart",JSON.stringify(state.value))
+   },
+   remove:(state,action)=>{
+   state.value.map((item,index)=>{
+     if(item.title==action.payload.title){
+   state.value.splice(index,1)
+    
+     }
+   })
+    localStorage.setItem("cart",JSON.stringify(state.value))
+   },
     
     
   },
@@ -57,6 +67,6 @@ state.value.push({...action.payload,quantity: 1})
 
 
    
-export const {   addToCard,incre,decre} =AddToCardSlice.actions
+export const {   addToCard,incre,decre,remove} =AddToCardSlice.actions
 
 export default AddToCardSlice.reducer

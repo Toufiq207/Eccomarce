@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Banner from '../layout/Banner'
 import Add from '../layout/Add'
 import Container from '../components/Container'
@@ -10,12 +10,11 @@ import Bottol from '../assets/bottol.png'
 import Product from '../assets/product.png'
 import Thala from '../assets/thala.png'
 import Bag2 from '../assets/bag2.png'
+
 import Image from '../components/Image'
 import Cart from '../components/Cart'
-import Blendere from '../assets/blendere.png'
-import Watch from '../assets/watch.jpg'
-import Jhuri from '../assets/jhuri.png'
-import Bag from '../assets/bag.png'
+
+
 
 
 
@@ -30,6 +29,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import SimpleNextArrow from '../components/SimpleNextArrow'
 import SimplePrevArrow from '../components/SimplePrevArrow'
+import axios from 'axios'
+import { data, Link } from 'react-router-dom'
 
 
 
@@ -37,6 +38,7 @@ import SimplePrevArrow from '../components/SimplePrevArrow'
 
 
 const Home = () => {
+  let [alldata,setAlldata]=useState([])
     var settings = {
     arrows:true,
     infinite: true,
@@ -46,6 +48,16 @@ const Home = () => {
        nextArrow:<SimpleNextArrow/>,
        prevArrow:<SimplePrevArrow/>
   };
+  useEffect(()=>{
+async function allData(){
+let data=await axios.get("https://dummyjson.com/products")
+setAlldata(data.data.products);
+
+}
+allData()
+  },[])
+  
+  
 
   return (
   
@@ -56,36 +68,20 @@ const Home = () => {
         <Heading className='pb-10' text='New Arrivals'/>
     
             <Slider {...settings}>
-      
+              {
+                alldata.map(item=>(
+    
+     
+     
       <div>
-    <Cart img={Blendere} title="Product one" price="20"/>
-      </div>
+    <Cart img={item.thumbnail} title={item.title} price={item.price}/>
+      </div> 
+     ))
+              }
+      
+    
    
-   <div>
-    <Cart img={Watch} title="Product two" price="15"/>
-      </div>
-      <div>
-    <Cart img={Jhuri} title="Product three" price="22"/>
-      </div>
-
-
-
-<div>
-    <Cart img={Bag} title="Product four" price="21"/>
-      </div>
-      <div>
-    <Cart img={Bottol} title="Product five" price="30"/>
-      </div>
-      <div>
-    <Cart img={Product} title="Product six" price="24"/>
-      </div>
-      <div>
-    <Cart img={Bag2} title="Product seven" price="23"/>
-      </div>
-      <div>
-    <Cart img={Thala} title="Product eight" price="31"/>
-      </div>
-      
+   
    
       
     </Slider>
@@ -100,13 +96,14 @@ const Home = () => {
       </Container>
       <Container >
         <Heading className='pb-10 mt-[118px]' text='Our Bestsellers'/>
-        <Flex className='justify-between mb-[130px]'>
-        <Cart img={Bottol}/>
-        <Cart img={Product}/>
-        <Cart img={Thala}/>
-        <Cart img={Bag2}/>
-        
-        
+        <Flex className='gap-x-[45px]'>
+         {
+                alldata.map((item,index)=>(
+ (     index>4 && index<9) ?
+    <Cart img={item.thumbnail} title={item.title} price={item.price}/>
+      : ""
+                ))
+              }
         </Flex>
       </Container>
       <Container>
@@ -116,13 +113,14 @@ const Home = () => {
       <Container >
  
       <Heading className='pb-10 mt-[118px]' text='Special Offers'/>
-        <Flex className='justify-between mb-[130px]'>
-        <Cart img={Cap}/>
-        <Cart img={Table}/>
-        <Cart img={Erephone}/>
-        <Cart img={Glass}/>
-        
-        
+        <Flex className='gap-x-[45px]'>
+         {
+                alldata.map((item,index)=>(
+ (     index>9 && index<14) ?
+    <Cart img={item.thumbnail} title={item.title} price={item.price}/>
+      : ""
+                ))
+              }
         </Flex>
       </Container>
   

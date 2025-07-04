@@ -6,6 +6,7 @@ import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import { FaCodeCompare } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import { addToCard } from '../slices/AddToCardSlice';
+import { Link } from 'react-router-dom';
 
 const Cart = ({img ,title,price}) => {
 let dispatch=useDispatch()
@@ -42,12 +43,15 @@ quantity: 1
             <li className='text-[#767676] hover:text-[#262626] text-[16px] font-normal hover:font-bold font-dm' onClick={handleAddtocart}>Add to Cart <FaShoppingCart className='inline text-sm ml-4 ' /></li>
         </ul>
        </div>
-        <Flex className='justify-between items-center pt-6 pb-4'>
+        <Link to={`/product/${title}`} >
+      <Flex className='justify-between items-center pt-6 pb-4'>
         {/* <h4 className='text-xl text-secondary font-bold font-dm'>Basic Crew Neck Tee</h4>
         <p className='text-base text-primary font-normal font-dm'>$44.00</p> */}
         <h4 className='text-xl text-secondary font-bold font-dm'>{title}</h4>
         <p className='text-base text-primary font-normal font-dm'>${price}</p>
         </Flex>
+              
+     </Link> 
      <p className='text-base text-primary font-normal font-dm'>Black</p>
      <button className='py-2 px-8 bg-black text-white text-sm font-bold font-dm absolute top-5 left-5'>New</button>
        

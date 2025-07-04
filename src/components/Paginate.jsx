@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate';
 import Cart from './Cart';
 
 import Data from '../Data';
+import axios from 'axios';
 
 
 const items = [Data
@@ -21,7 +22,7 @@ function Items({ currentItems }) {
        {currentItems &&
         currentItems.map((item) => (
         <div>
-            <h3><Cart img={item. image} price={item. Price} title={item. title}/></h3>
+            <h3><Cart img={item.thumbnail} price={item. Price} title={item. title}/></h3>
           </div>
         ))}
      </div>
@@ -31,7 +32,18 @@ function Items({ currentItems }) {
 
 function Paginate({ itemsPerPage }) {
   
+  let [alldata,setAlldata]=useState([])
+   useEffect(()=>{
+async function allData(){
+let data=await axios.get("https://dummyjson.com/products")
+setAlldata(data.data.products);
 
+}
+allData()
+  },[])
+  
+  
+  
 
 
   const [itemOffset, setItemOffset] = useState(0);
@@ -41,14 +53,14 @@ function Paginate({ itemsPerPage }) {
 
   const endOffset = itemOffset + itemsPerPage;
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = Data.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(Data.length / itemsPerPage);
+  const currentItems = alldata.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(alldata.length / itemsPerPage);
 
  
 
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % Data.length;
+    const newOffset = (event.selected * itemsPerPage) % alldata.length;
     console.log(
       `User requested page number ${event.selected}, which is offset ${newOffset}`
     );

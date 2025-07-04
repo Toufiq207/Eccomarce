@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Container from '../components/Container'
 import Image from '../components/Image'
 import Balti from '../assets/Balti.png'
@@ -10,22 +10,50 @@ import Flex from '../components/Flex'
 import Heading from '../components/Heading'
 import { FaStar } from 'react-icons/fa'
 import Button from '../components/Button'
+import { useLocation, useParams } from 'react-router-dom'
+import axios from 'axios'
 
 const Product = () => {
+   let [alldata,setAlldata]=useState([])
+   let [product,setProduct]=useState([])
+  let singleProduct=useParams()
+
+
+   useEffect(()=>{
+  async function allData(){
+  let data=await axios.get("https://dummyjson.com/products")
+  setAlldata(data.data.products);
+  
+  }
+  allData()
+    },[])
+   useEffect(()=>{
+  window.scrollTo({top:0})
+  
+    },[])
+
+
+
+
+// console.log(product);
+
+
+
+  
   return (
    
     <section className='py-[150px]'>
       <Container>
-        <Flex className='flex-wrap gap-[40px] justify-between gap-y-[65px]'>
-      <div className='w-w48'>  <Image className='w-full' src={Balti}/></div>
-      <div className='w-w48'>  <Image className='w-full'  src={Glass}/></div>
-      <div className='w-w48'>  <Image className='w-full'  src={Erephone}/></div>
-      <div className='w-w48'>  <Image className='w-full'  src={Table}/></div>
-        
-       
-        </Flex>
-
-        <Heading className='pt-12 pb-4' text='Product'/>
+ 
+ {
+     alldata.map(item=>{
+  
+    if(item.title==singleProduct.title){
+    return(
+      <>
+      <Image src={item.thumbnail}/>
+     
+            <Heading className='pt-12 pb-4' text={item.title}/>
       <Flex className='gap-x-6 items-center'>
         <ul className='flex gap-x-[2px]'>
           <li ><FaStar className='text-[#FFD881] text-sm'/></li>
@@ -42,7 +70,7 @@ const Product = () => {
         
   
         
-        <p className='text-xl text-secondary font-bold font-dm'>$44.00</p>
+        <p className='text-xl text-secondary font-bold font-dm'>{item.price}</p>
       </Flex>
       <Flex className='items-center gap-x-[53px] pt-[33px]'>
     
@@ -104,7 +132,7 @@ const Product = () => {
 <span className='text-lg text-secondary font-bold'>+</span>
 </Flex>
 <div className=' w-w48 py-8'>
-<p className='text-base text-primary font-dm font-normal'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+<p className='text-base text-primary font-dm font-normal'>{item.description}</p>
 </div>
 
 <Flex className='gap-x-[62px] pt-[30px] pb-[55px]  pb-[30px] '>
@@ -148,6 +176,29 @@ const Product = () => {
       </label>
       <br />
     <Button text='Post'/>
+     
+      
+      </>
+    )
+      
+    }
+
+    
+   })
+ }
+
+ 
+
+
+
+
+
+
+
+
+
+
+
         </Container>
     </section>
   )

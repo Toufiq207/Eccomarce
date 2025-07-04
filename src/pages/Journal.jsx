@@ -1,10 +1,18 @@
 import React from 'react'
+import Container from '../components/Container'
 
 const Journal = () => {
+    
+
+  
   return (
-    <div>
-      <h1>Journal</h1>
-      </div>
+ 
+   
+   <section>
+    <Container>
+      lizon
+    </Container>
+   </section>
   )
 }
 
