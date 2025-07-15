@@ -11,6 +11,7 @@ import {  useDispatch, useSelector } from 'react-redux'
 import { decre, incre, remove } from '../slices/AddToCardSlice'
 import Button from '../components/Button'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 
 
@@ -18,6 +19,10 @@ const Sideber = () => {
   let dispatch=useDispatch()
   let [show,setShow]=useState(false)
   let [total,setTotal]=useState(0)
+  
+    let [alldata,setAlldata]=useState([])
+    let [search,setSearch]=useState([])
+    let [input,setInput]=useState('')
   let data=useSelector((state)=>state.addToCard.value)
   
 
@@ -45,6 +50,40 @@ const Sideber = () => {
    setTotal(total);
  },[data])
 
+
+
+
+
+   useEffect(()=>{
+async function allData(){
+let data=await axios.get("https://dummyjson.com/products")
+setAlldata(data.data.products);
+
+
+
+}
+allData()
+  },[])
+  
+  
+
+
+
+
+ let handlechange=(e)=>{
+
+
+setInput(e.target.value)
+
+  alldata.filter(item=>{
+    let search=alldata.filter(item=>item.title.toLowerCase().includes(e.target.value.toLowerCase()))
+    
+   setSearch(search);
+    
+  })
+  
+ }
+
  
   return (
     <section className='bg-[#F5F5F3] py-6'>
@@ -55,9 +94,24 @@ const Sideber = () => {
                 <p className='text-[14px] text-[#262626] font-normal font-dm'>Shop by Category</p>
                 </div>
                 <div className='w-8/12 relative'>
-                <input className='bg-white py-4 pl-6 pr-16 w-full placeholder:text-[#C4C4C4] placeholder:text-sm placeholder:font-normal' type="text" placeholder='Search Products....'/>
+                <input onChange={handlechange} className='bg-white py-4 pl-6 pr-16 w-full placeholder:text-[#C4C4C4] placeholder:text-sm placeholder:font-normal' type="text" placeholder='Search Products....'/>
+                 <div   >  
                 <Image className='absolute top-1/2 right-6 -translate-1/2' src={Searce}/>
-
+                  </div>
+                  {
+                    search.length>0 &&
+                    input.length>0 &&
+                    <div className='w-full bg-white py-[40px] mt-2 pl-4 absolute shadow-2xl'>
+                    {
+                      // alldata.map(item=>(
+                      //   <p>{item.title}</p>
+                      // ))
+                      search.map(item=>(
+                       <Link to='/shop{}'><p className='cursor-pointer'>{item.title}-{item.price}=={item.id}</p></Link>
+                      ))
+                    }
+                  </div>
+                  }
                 </div>
                 <div className='w-4/12 flex justify-end'>
               
